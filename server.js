@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Simulated local wallet
+// Simulated local balance for testing
 let userWallet = {
   phone: '08012345678',
   balance: 5000,
@@ -31,12 +31,25 @@ app.get('/api/wallet', (req, res) => {
   res.json({ success: true, balance: userWallet.balance });
 });
 
-// Real Arewagate Token Fetcher
+// Arewagate Token Fetcher using HTTP Basic Auth
 async function getArewagateToken() {
-  const authRes = await axios.post('https://api.arewagate.com/api/v1/auth/token', {
-    public_key: process.env.AREWAGATE_PUBLIC_KEY,
-    secret_key: process.env.AREWAGATE_SECRET_KEY
-  });
+  const publicKey = (process.env.AREWAGATE_PUBLIC_KEY || '').trim();
+  const secretKey = (process.env.AREWAGATE_SECRET_KEY || '').trim();
+
+  // Create standard HTTP Basic Auth header: Basic base64(publicKey:secretKey)
+  const basicAuth = Buffer.from(`${publicKey}:${secretKey}`).toString('base64');
+
+  const authRes = await axios.post(
+    'https://api.arewagate.com/api/v1/auth/token',
+    {},
+    {
+      headers: {
+        'Authorization': `Basic ${basicAuth}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
   return authRes.data.data?.token || authRes.data.access_token || authRes.data.token;
 }
 
@@ -57,7 +70,7 @@ app.post('/api/vend', async (req, res) => {
   }
 
   try {
-    // 3. Obtain Token from Arewagate
+    // 3. Obtain Token using Basic Auth
     const token = await getArewagateToken();
 
     // 4. Dispatch live order to Arewagate
