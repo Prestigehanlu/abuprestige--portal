@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Simulated local balance for testing
+// Simulated local wallet
 let userWallet = {
   phone: '08012345678',
   balance: 5000,
@@ -31,28 +31,6 @@ app.get('/api/wallet', (req, res) => {
   res.json({ success: true, balance: userWallet.balance });
 });
 
-// Arewagate Token Fetcher using HTTP Basic Auth
-async function getArewagateToken() {
-  const publicKey = (process.env.AREWAGATE_PUBLIC_KEY || '').trim();
-  const secretKey = (process.env.AREWAGATE_SECRET_KEY || '').trim();
-
-  // Create standard HTTP Basic Auth header: Basic base64(publicKey:secretKey)
-  const basicAuth = Buffer.from(`${publicKey}:${secretKey}`).toString('base64');
-
-  const authRes = await axios.post(
-    'https://api.arewagate.com/api/v1/auth/token',
-    {},
-    {
-      headers: {
-        'Authorization': `Basic ${basicAuth}`,
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-
-  return authRes.data.data?.token || authRes.data.access_token || authRes.data.token;
-}
-
 // Data Vending Route
 app.post('/api/vend', async (req, res) => {
   const { planOrAmount, phone, pin } = req.body;
@@ -64,17 +42,16 @@ app.post('/api/vend', async (req, res) => {
 
   const selectedPlan = PLAN_MAP[planOrAmount] || PLAN_MAP['mtn-sme-1gb'];
 
-  // 2. Check local wallet balance
+  // 2. Local balance check
   if (userWallet.balance < selectedPlan.cost) {
     return res.status(400).json({ success: false, message: 'Insufficient wallet balance' });
   }
 
   try {
-    // 3. Obtain Token using Basic Auth
-    const token = await getArewagateToken();
-
-    // 4. Dispatch live order to Arewagate
     const idempotencyKey = crypto.randomUUID();
+    const secretKey = (process.env.AREWAGATE_SECRET_KEY || '').trim();
+
+    // 3. Dispatch order directly with Secret Key as Bearer Token
     const vendRes = await axios.post(
       'https://api.arewagate.com/api/v1/data-subscription/buy-data',
       {
@@ -85,14 +62,14 @@ app.post('/api/vend', async (req, res) => {
       },
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${secretKey}`,
           'Content-Type': 'application/json',
           'Idempotency-Key': idempotencyKey
         }
       }
     );
 
-    // 5. Deduct local balance upon provider acceptance
+    // 4. Deduct local balance upon successful provider response
     userWallet.balance -= selectedPlan.cost;
 
     return res.json({
