@@ -2,171 +2,473 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AbuPrestige VTU - Instant Data & Airtime</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AbuPrestige VTU — Instant Data & Airtime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4338ca;
+      --primary-light: #6366f1;
+      --surface: #ffffff;
+      --background: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px 12px 60px 12px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Header */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 4px 8px 4px;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #1e1b4b;
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #a7f3d0;
+    }
+
+    .badge-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #059669;
+      border-radius: 50%;
+    }
+
+    /* Wallet Card */
+    .wallet-card {
+      background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #6366f1 100%);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
+      box-shadow: 0 12px 28px -6px rgba(67, 56, 202, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wallet-card::after {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 140px;
+      height: 140px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+    }
+
+    .wallet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .wallet-label {
+      font-size: 0.85rem;
+      color: #c7d2fe;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .refresh-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .refresh-btn:active {
+      transform: rotate(180deg);
+    }
+
+    .balance-amount {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 18px;
+    }
+
+    .bank-account-box {
+      background: rgba(15, 23, 42, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .bank-name {
+      color: #e0e7ff;
+      font-weight: 600;
+    }
+
+    .bank-acc-no {
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+
+    .copy-chip {
+      background: #ffffff;
+      color: #312e81;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    /* Main Action Card */
+    .action-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Network Selector */
+    .network-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .network-pill {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 4px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: #f8fafc;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .network-pill.active {
+      background: #eef2ff;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .network-pill[data-net="mtn"].active {
+      border-color: #f59e0b;
+      background: #fffbeb;
+      color: #b45309;
+    }
+
+    .network-pill[data-net="airtel"].active {
+      border-color: #ef4444;
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    .network-pill[data-net="glo"].active {
+      border-color: #10b981;
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    .network-pill[data-net="9mobile"].active {
+      border-color: #065f46;
+      background: #f0fdf4;
+      color: #065f46;
+    }
+
+    /* Inputs */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border);
+      background: #f8fafc;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 18px -4px rgba(67, 56, 202, 0.4);
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+      background: #3730a3;
+    }
+
+    /* Response Notification Box */
+    .status-box {
+      display: none;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 14px;
+      line-height: 1.4;
+    }
+
+    .status-box.success {
+      display: block;
+      background: #ecfdf5;
+      border: 1px solid #6ee7b7;
+      color: #065f46;
+    }
+
+    .status-box.error {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+    }
+  </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800">
-
-  <!-- Top Navbar -->
-  <header class="bg-indigo-900 text-white shadow-md">
-    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <i class="fa-solid fa-bolt text-yellow-400 text-xl"></i>
-        <h1 class="font-bold text-lg tracking-wide">AbuPrestige VTU</h1>
-      </div>
-      <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-medium">Live</span>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Brand Header -->
+    <div class="top-bar">
+      <div class="brand-title">AbuPrestige VTU</div>
+      <div class="badge-live">Automated Vending</div>
     </div>
-  </header>
 
-  <main class="max-w-md mx-auto p-4 space-y-4">
-    <!-- Wallet Card -->
-    <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-blue-900 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
-      <div class="flex justify-between items-start mb-2">
-        <div>
-          <p class="text-xs text-indigo-200">Available Balance</p>
-          <h2 class="text-3xl font-black tracking-tight" id="wallet-balance">₦5,000.00</h2>
-        </div>
-        <button onclick="refreshBalance()" class="text-indigo-200 hover:text-white text-sm bg-white/10 p-2 rounded-full">
-          <i class="fa-solid fa-rotate"></i>
-        </button>
+    <!-- Modern Wallet Card -->
+    <div class="wallet-card">
+      <div class="wallet-header">
+        <span class="wallet-label">Wallet Balance</span>
+        <button class="refresh-btn" onclick="fetchBalance()" title="Refresh Balance">↻</button>
       </div>
-
-      <div class="mt-4 pt-3 border-t border-indigo-700/60 flex items-center justify-between text-xs">
+      <div class="balance-amount" id="balanceDisplay">₦5,000.00</div>
+      
+      <div class="bank-account-box">
         <div>
-          <span class="text-indigo-300">Dedicated Wema Acc:</span>
-          <span class="font-mono font-semibold tracking-wider text-yellow-300"> 8123456789</span>
+          <div class="bank-name">Automated Wema Bank</div>
+          <div class="bank-acc-no">8123456789</div>
         </div>
-        <button onclick="navigator.clipboard.writeText('8123456789'); alert('Account number copied!')" class="text-indigo-200 underline">Copy</button>
+        <span class="copy-chip" onclick="navigator.clipboard.writeText('8123456789'); alert('Account number copied!');">Copy</span>
       </div>
     </div>
 
-    <!-- Quick Purchase Box -->
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
-      <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide flex items-center gap-2">
-        <i class="fa-solid fa-mobile-screen-button text-indigo-600"></i> Buy Mobile Data
-      </h3>
+    <!-- Purchase Form Card -->
+    <div class="action-card">
+      <div class="section-title">
+        <span>⚡</span> Buy Mobile Data
+      </div>
 
       <!-- Network Selector -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-500 mb-1.5">Select Network</label>
-        <div class="grid grid-cols-4 gap-2">
-          <button type="button" onclick="selectNet('mtn')" class="net-btn border-2 border-indigo-600 bg-indigo-50 font-bold py-2 rounded-xl text-xs text-center text-indigo-900">MTN</button>
-          <button type="button" onclick="selectNet('airtel')" class="net-btn border border-slate-200 font-bold py-2 rounded-xl text-xs text-center text-slate-600">Airtel</button>
-          <button type="button" onclick="selectNet('glo')" class="net-btn border border-slate-200 font-bold py-2 rounded-xl text-xs text-center text-slate-600">Glo</button>
-          <button type="button" onclick="selectNet('9mobile')" class="net-btn border border-slate-200 font-bold py-2 rounded-xl text-xs text-center text-slate-600">9mobile</button>
-        </div>
+      <div class="network-grid">
+        <div class="network-pill active" data-net="mtn" onclick="selectNetwork('mtn')">MTN</div>
+        <div class="network-pill" data-net="airtel" onclick="selectNetwork('airtel')">Airtel</div>
+        <div class="network-pill" data-net="glo" onclick="selectNetwork('glo')">Glo</div>
+        <div class="network-pill" data-net="9mobile" onclick="selectNetwork('9mobile')">9mobile</div>
       </div>
 
-      <!-- Plan Selector -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-500 mb-1">Select Data Plan</label>
-        <select id="data-plan" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-600">
-          <option value="mtn-sme-1gb">MTN SME 1.0GB — ₦290 (30 Days)</option>
-          <option value="mtn-sme-2gb">MTN SME 2.0GB — ₦580 (30 Days)</option>
-          <option value="mtn-sme-5gb">MTN SME 5.0GB — ₦1,450 (30 Days)</option>
-          <option value="mtn-cg-1gb">MTN Corporate Gifting 1GB — ₦310 (30 Days)</option>
+      <div class="form-group">
+        <label class="form-label">Data Plan</label>
+        <select class="form-select" id="planSelect">
+          <option value="mtn-sme-1gb">MTN SME 1.0 GB — ₦290 (30 Days)</option>
+          <option value="mtn-sme-2gb">MTN SME 2.0 GB — ₦580 (30 Days)</option>
+          <option value="mtn-sme-5gb">MTN SME 5.0 GB — ₦1,450 (30 Days)</option>
         </select>
       </div>
 
-      <!-- Recipient Phone -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-500 mb-1">Recipient Phone Number</label>
-        <input type="tel" id="recipient-phone" placeholder="08012345678" maxlength="11" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+      <div class="form-group">
+        <label class="form-label">Recipient Phone Number</label>
+        <input class="form-input" id="phoneInput" type="tel" placeholder="08012345678" maxlength="11" />
       </div>
 
-      <!-- Security PIN -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-500 mb-1">Transaction PIN (Default: 1234)</label>
-        <input type="password" id="user-pin" placeholder="••••" maxlength="4" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-sm font-medium tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+      <div class="form-group">
+        <label class="form-label">Transaction PIN (Default: 1234)</label>
+        <input class="form-input" id="pinInput" type="password" placeholder="••••" maxlength="4" />
       </div>
 
-      <!-- Status Banner -->
-      <div id="status-msg" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+      <button class="submit-btn" id="submitBtn" onclick="handlePurchase()">Complete Purchase →</button>
 
-      <!-- Submit Button -->
-      <button onclick="processPurchase()" id="btn-submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow transition duration-200 flex items-center justify-center gap-2">
-        <span>Complete Purchase</span>
-        <i class="fa-solid fa-arrow-right text-xs"></i>
-      </button>
+      <div class="status-box" id="statusMessage"></div>
     </div>
-  </main>
+
+  </div>
 
   <script>
-    let activeNetwork = 'mtn';
+    let currentNetwork = 'mtn';
 
-    function selectNet(network) {
-      activeNetwork = network;
-      document.querySelectorAll('.net-btn').forEach(btn => {
-        btn.className = 'net-btn border border-slate-200 font-bold py-2 rounded-xl text-xs text-center text-slate-600';
+    function selectNetwork(net) {
+      currentNetwork = net;
+      document.querySelectorAll('.network-pill').forEach(pill => {
+        pill.classList.toggle('active', pill.dataset.net === net);
       });
-      event.target.className = 'net-btn border-2 border-indigo-600 bg-indigo-50 font-bold py-2 rounded-xl text-xs text-center text-indigo-900';
     }
 
-    async function refreshBalance() {
+    async function fetchBalance() {
       try {
         const res = await fetch('/api/wallet');
         const data = await res.json();
         if (data.success) {
-          document.getElementById('wallet-balance').innerText = '₦' + data.balance.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+          document.getElementById('balanceDisplay').textContent = '₦' + Number(data.balance).toLocaleString('en-NG', { minimumFractionDigits: 2 });
         }
-      } catch (err) {
-        console.error('Failed to update balance', err);
+      } catch (e) {
+        console.error('Balance fetch failed');
       }
     }
 
-    async function processPurchase() {
-      const phone = document.getElementById('recipient-phone').value.trim();
-      const pin = document.getElementById('user-pin').value.trim();
-      const plan = document.getElementById('data-plan').value;
-      const statusDiv = document.getElementById('status-msg');
-      const submitBtn = document.getElementById('btn-submit');
+    async function handlePurchase() {
+      const phone = document.getElementById('phoneInput').value.trim();
+      const pin = document.getElementById('pinInput').value.trim();
+      const plan = document.getElementById('planSelect').value;
+      const statusBox = document.getElementById('statusMessage');
+      const submitBtn = document.getElementById('submitBtn');
 
       if (phone.length < 11) {
-        showStatus('Please enter a valid 11-digit phone number.', 'bg-red-50 text-red-700 border border-red-200');
+        showStatus('Please enter a valid 11-digit phone number', 'error');
         return;
       }
       if (pin.length !== 4) {
-        showStatus('Please enter your 4-digit PIN.', 'bg-red-50 text-red-700 border border-red-200');
+        showStatus('Please enter your 4-digit transaction PIN', 'error');
         return;
       }
 
+      submitBtn.textContent = 'Processing...';
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
 
       try {
         const res = await fetch('/api/vend', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'data', network: activeNetwork, planOrAmount: plan, phone, pin })
+          body: JSON.stringify({
+            network: currentNetwork,
+            planOrAmount: plan,
+            phone: phone,
+            pin: pin
+          })
         });
-        const result = await res.json();
 
-        if (result.success) {
-          showStatus(`Success! ${result.message}. Ref: ${result.reference}`, 'bg-emerald-50 text-emerald-800 border border-emerald-200');
-          document.getElementById('user-pin').value = '';
-          refreshBalance();
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showStatus(`Success! ${data.message} (Ref: ${data.reference})`, 'success');
+          fetchBalance();
         } else {
-          showStatus(result.message || 'Transaction failed', 'bg-red-50 text-red-700 border border-red-200');
+          showStatus(data.message || 'Transaction could not be completed.', 'error');
         }
       } catch (err) {
-        showStatus('Connection error. Server may still be booting.', 'bg-amber-50 text-amber-800 border border-amber-200');
+        showStatus('Network connection error. Please try again.', 'error');
       } finally {
+        submitBtn.textContent = 'Complete Purchase →';
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Complete Purchase</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
       }
     }
 
-    function showStatus(msg, classes) {
-      const el = document.getElementById('status-msg');
-      el.className = `p-3 rounded-xl text-xs font-medium ${classes}`;
-      el.innerText = msg;
-      el.classList.remove('hidden');
+    function showStatus(msg, type) {
+      const box = document.getElementById('statusMessage');
+      box.textContent = msg;
+      box.className = `status-box ${type}`;
     }
 
-    // Refresh balance on load
-    refreshBalance();
+    fetchBalance();
   </script>
 </body>
 </html>
