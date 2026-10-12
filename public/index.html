@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AbuPrestige VTU — Instant Data & Airtime</title>
+  <title>AbuPrestige VTU — Smart TopUp</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #4338ca;
-      --primary-light: #6366f1;
-      --surface: #ffffff;
-      --background: #f8fafc;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg-page: #f1f5f9;
+      --card-bg: #ffffff;
       --text-main: #0f172a;
       --text-muted: #64748b;
       --border: #e2e8f0;
       --success: #10b981;
       --danger: #ef4444;
-      --radius-lg: 20px;
-      --radius-md: 14px;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
     }
 
     * {
@@ -31,123 +32,96 @@
     }
 
     body {
-      background-color: var(--background);
+      background-color: var(--bg-page);
       color: var(--text-main);
       display: flex;
       justify-content: center;
       min-height: 100vh;
-      padding: 16px 12px 60px 12px;
+      padding: 12px 12px 80px 12px;
     }
 
-    .app-container {
+    .app-viewport {
       width: 100%;
       max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
-    /* Header */
-    .top-bar {
+    /* Top Brand Nav */
+    .app-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 4px 4px 8px 4px;
+      padding: 4px 6px;
     }
 
     .brand-title {
       font-size: 1.25rem;
       font-weight: 800;
       letter-spacing: -0.5px;
-      color: #1e1b4b;
-    }
-
-    .badge-live {
-      display: inline-flex;
+      color: #0f172a;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: #ecfdf5;
-      color: #059669;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid #a7f3d0;
+      gap: 8px;
     }
 
-    .badge-live::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: #059669;
-      border-radius: 50%;
+    .brand-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
     }
 
     /* Wallet Card */
     .wallet-card {
-      background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #6366f1 100%);
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
       color: #ffffff;
-      border-radius: var(--radius-lg);
-      padding: 24px 20px;
-      box-shadow: 0 12px 28px -6px rgba(67, 56, 202, 0.35);
+      border-radius: var(--radius-xl);
+      padding: 22px 20px;
+      box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.3);
       position: relative;
       overflow: hidden;
     }
 
-    .wallet-card::after {
+    .wallet-card::before {
       content: '';
       position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 140px;
-      height: 140px;
+      width: 180px;
+      height: 180px;
       background: rgba(255, 255, 255, 0.08);
       border-radius: 50%;
+      top: -40px;
+      right: -40px;
     }
 
     .wallet-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .wallet-label {
-      font-size: 0.85rem;
-      color: #c7d2fe;
+      font-size: 0.8rem;
+      color: #bfdbfe;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      margin-bottom: 6px;
     }
 
-    .refresh-btn {
-      background: rgba(255, 255, 255, 0.15);
-      border: none;
-      color: #fff;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      cursor: pointer;
+    .balance-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      transition: transform 0.2s;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 16px;
     }
 
-    .refresh-btn:active {
-      transform: rotate(180deg);
-    }
-
-    .balance-amount {
-      font-size: 2.2rem;
+    .balance-val {
+      font-size: 2.1rem;
       font-weight: 800;
       letter-spacing: -1px;
-      margin-bottom: 18px;
     }
 
-    .bank-account-box {
-      background: rgba(15, 23, 42, 0.25);
+    .wallet-account-chip {
+      background: rgba(15, 23, 42, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: var(--radius-md);
       padding: 10px 14px;
@@ -157,105 +131,85 @@
       font-size: 0.85rem;
     }
 
-    .bank-name {
-      color: #e0e7ff;
-      font-weight: 600;
-    }
-
-    .bank-acc-no {
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #fff;
-    }
-
-    .copy-chip {
+    .copy-btn {
       background: #ffffff;
-      color: #312e81;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 4px 8px;
+      color: #1e3a8a;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 5px 10px;
       border-radius: 6px;
       cursor: pointer;
-      margin-left: 8px;
     }
 
-    /* Main Action Card */
+    /* Action Card */
     .action-card {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: 22px 18px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      padding: 20px 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
       border: 1px solid var(--border);
     }
 
     .section-title {
       font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 16px;
+      font-weight: 800;
       color: #1e293b;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
-    /* Network Selector */
-    .network-grid {
+    /* Network Switcher */
+    .carrier-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
-    .network-pill {
+    .carrier-btn {
       border: 2px solid var(--border);
       border-radius: var(--radius-md);
       padding: 10px 4px;
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
       background: #f8fafc;
       color: var(--text-muted);
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
 
-    .network-pill.active {
-      background: #eef2ff;
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .network-pill[data-net="mtn"].active {
+    .carrier-btn.active[data-carrier="mtn"] {
       border-color: #f59e0b;
       background: #fffbeb;
       color: #b45309;
     }
-
-    .network-pill[data-net="airtel"].active {
+    .carrier-btn.active[data-carrier="airtel"] {
       border-color: #ef4444;
       background: #fef2f2;
       color: #b91c1c;
     }
-
-    .network-pill[data-net="glo"].active {
+    .carrier-btn.active[data-carrier="glo"] {
       border-color: #10b981;
       background: #ecfdf5;
       color: #047857;
     }
-
-    .network-pill[data-net="9mobile"].active {
-      border-color: #065f46;
+    .carrier-btn.active[data-carrier="9mobile"] {
+      border-color: #047857;
       background: #f0fdf4;
-      color: #065f46;
+      color: #047857;
     }
 
-    /* Inputs */
+    /* Form Fields */
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .form-label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       color: #475569;
       margin-bottom: 6px;
@@ -264,7 +218,7 @@
 
     .form-input, .form-select {
       width: 100%;
-      padding: 14px 14px;
+      padding: 14px;
       border-radius: var(--radius-md);
       border: 1.5px solid var(--border);
       background: #f8fafc;
@@ -272,7 +226,7 @@
       font-weight: 600;
       color: var(--text-main);
       outline: none;
-      transition: border-color 0.2s;
+      transition: border 0.2s;
     }
 
     .form-input:focus, .form-select:focus {
@@ -280,8 +234,8 @@
       background: #ffffff;
     }
 
-    /* Submit Button */
-    .submit-btn {
+    /* Purchase Button */
+    .primary-btn {
       width: 100%;
       background: var(--primary);
       color: #ffffff;
@@ -289,86 +243,88 @@
       padding: 16px;
       border-radius: var(--radius-md);
       font-size: 1rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 8px 18px -4px rgba(67, 56, 202, 0.4);
-      transition: all 0.2s;
-      margin-top: 8px;
+      box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.4);
+      margin-top: 6px;
+      transition: opacity 0.2s;
     }
 
-    .submit-btn:active {
-      transform: scale(0.98);
-      background: #3730a3;
+    .primary-btn:active {
+      opacity: 0.85;
     }
 
-    /* Response Notification Box */
-    .status-box {
+    /* Status Alert */
+    .alert-box {
       display: none;
-      padding: 14px;
+      padding: 12px 14px;
       border-radius: var(--radius-md);
       font-size: 0.85rem;
       font-weight: 600;
       margin-top: 14px;
       line-height: 1.4;
     }
-
-    .status-box.success {
+    .alert-box.success {
       display: block;
       background: #ecfdf5;
-      border: 1px solid #6ee7b7;
+      border: 1px solid #a7f3d0;
       color: #065f46;
     }
-
-    .status-box.error {
+    .alert-box.error {
       display: block;
       background: #fef2f2;
-      border: 1px solid #fca5a5;
+      border: 1px solid #fecaca;
       color: #991b1b;
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
+
+  <div class="app-viewport">
     
-    <!-- Top Brand Header -->
-    <div class="top-bar">
-      <div class="brand-title">AbuPrestige VTU</div>
-      <div class="badge-live">Automated Vending</div>
+    <!-- Top Header -->
+    <div class="app-header">
+      <div class="brand-title">
+        AbuPrestige VTU
+      </div>
+      <span class="brand-badge">24/7 Automated</span>
     </div>
 
-    <!-- Modern Wallet Card -->
+    <!-- Balance Card -->
     <div class="wallet-card">
       <div class="wallet-header">
-        <span class="wallet-label">Wallet Balance</span>
-        <button class="refresh-btn" onclick="fetchBalance()" title="Refresh Balance">↻</button>
+        <span>Available Balance</span>
+        <span onclick="fetchBalance()" style="cursor:pointer;">↻ Refresh</span>
       </div>
-      <div class="balance-amount" id="balanceDisplay">₦5,000.00</div>
-      
-      <div class="bank-account-box">
+      <div class="balance-row">
+        <span class="balance-val" id="balanceDisplay">₦5,000.00</span>
+      </div>
+
+      <div class="wallet-account-chip">
         <div>
-          <div class="bank-name">Automated Wema Bank</div>
-          <div class="bank-acc-no">8123456789</div>
+          <div style="font-size:0.75rem; color:#bfdbfe;">Dedicated Wema Bank</div>
+          <div style="font-weight:800; letter-spacing:0.5px;">8123456789</div>
         </div>
-        <span class="copy-chip" onclick="navigator.clipboard.writeText('8123456789'); alert('Account number copied!');">Copy</span>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('8123456789'); alert('Wema Bank Account Number copied!');">Copy</button>
       </div>
     </div>
 
-    <!-- Purchase Form Card -->
+    <!-- Purchase Box -->
     <div class="action-card">
       <div class="section-title">
         <span>⚡</span> Buy Mobile Data
       </div>
 
-      <!-- Network Selector -->
-      <div class="network-grid">
-        <div class="network-pill active" data-net="mtn" onclick="selectNetwork('mtn')">MTN</div>
-        <div class="network-pill" data-net="airtel" onclick="selectNetwork('airtel')">Airtel</div>
-        <div class="network-pill" data-net="glo" onclick="selectNetwork('glo')">Glo</div>
-        <div class="network-pill" data-net="9mobile" onclick="selectNetwork('9mobile')">9mobile</div>
+      <!-- Carrier Tabs -->
+      <div class="carrier-grid">
+        <button class="carrier-btn active" data-carrier="mtn" onclick="selectCarrier('mtn')">MTN</button>
+        <button class="carrier-btn" data-carrier="airtel" onclick="selectCarrier('airtel')">Airtel</button>
+        <button class="carrier-btn" data-carrier="glo" onclick="selectCarrier('glo')">Glo</button>
+        <button class="carrier-btn" data-carrier="9mobile" onclick="selectCarrier('9mobile')">9mobile</button>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Data Plan</label>
+        <label class="form-label">Select Data Bundle</label>
         <select class="form-select" id="planSelect">
           <option value="mtn-sme-1gb">MTN SME 1.0 GB — ₦290 (30 Days)</option>
           <option value="mtn-sme-2gb">MTN SME 2.0 GB — ₦580 (30 Days)</option>
@@ -386,20 +342,20 @@
         <input class="form-input" id="pinInput" type="password" placeholder="••••" maxlength="4" />
       </div>
 
-      <button class="submit-btn" id="submitBtn" onclick="handlePurchase()">Complete Purchase →</button>
+      <button class="primary-btn" id="submitBtn" onclick="handlePurchase()">Complete Purchase →</button>
 
-      <div class="status-box" id="statusMessage"></div>
+      <div class="alert-box" id="statusBox"></div>
     </div>
 
   </div>
 
   <script>
-    let currentNetwork = 'mtn';
+    let activeCarrier = 'mtn';
 
-    function selectNetwork(net) {
-      currentNetwork = net;
-      document.querySelectorAll('.network-pill').forEach(pill => {
-        pill.classList.toggle('active', pill.dataset.net === net);
+    function selectCarrier(carrier) {
+      activeCarrier = carrier;
+      document.querySelectorAll('.carrier-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.carrier === carrier);
       });
     }
 
@@ -411,7 +367,7 @@
           document.getElementById('balanceDisplay').textContent = '₦' + Number(data.balance).toLocaleString('en-NG', { minimumFractionDigits: 2 });
         }
       } catch (e) {
-        console.error('Balance fetch failed');
+        console.error('Wallet balance fetch error');
       }
     }
 
@@ -419,19 +375,19 @@
       const phone = document.getElementById('phoneInput').value.trim();
       const pin = document.getElementById('pinInput').value.trim();
       const plan = document.getElementById('planSelect').value;
-      const statusBox = document.getElementById('statusMessage');
+      const statusBox = document.getElementById('statusBox');
       const submitBtn = document.getElementById('submitBtn');
 
       if (phone.length < 11) {
-        showStatus('Please enter a valid 11-digit phone number', 'error');
+        setStatus('Please enter an 11-digit phone number', 'error');
         return;
       }
       if (pin.length !== 4) {
-        showStatus('Please enter your 4-digit transaction PIN', 'error');
+        setStatus('Please enter your 4-digit PIN', 'error');
         return;
       }
 
-      submitBtn.textContent = 'Processing...';
+      submitBtn.textContent = 'Processing Transaction...';
       submitBtn.disabled = true;
 
       try {
@@ -439,7 +395,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            network: currentNetwork,
+            network: activeCarrier,
             planOrAmount: plan,
             phone: phone,
             pin: pin
@@ -449,23 +405,23 @@
         const data = await res.json();
 
         if (res.ok && data.success) {
-          showStatus(`Success! ${data.message} (Ref: ${data.reference})`, 'success');
+          setStatus(`Success! ${data.message} (Ref: ${data.reference})`, 'success');
           fetchBalance();
         } else {
-          showStatus(data.message || 'Transaction could not be completed.', 'error');
+          setStatus(data.message || 'Transaction could not be completed.', 'error');
         }
       } catch (err) {
-        showStatus('Network connection error. Please try again.', 'error');
+        setStatus('Server connection error. Please try again.', 'error');
       } finally {
         submitBtn.textContent = 'Complete Purchase →';
         submitBtn.disabled = false;
       }
     }
 
-    function showStatus(msg, type) {
-      const box = document.getElementById('statusMessage');
+    function setStatus(msg, type) {
+      const box = document.getElementById('statusBox');
       box.textContent = msg;
-      box.className = `status-box ${type}`;
+      box.className = `alert-box ${type}`;
     }
 
     fetchBalance();
