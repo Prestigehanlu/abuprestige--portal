@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Simulated local wallet
+// Simulated local balance
 let userWallet = {
   phone: '08012345678',
   balance: 5000,
@@ -31,6 +31,28 @@ app.get('/api/wallet', (req, res) => {
   res.json({ success: true, balance: userWallet.balance });
 });
 
+// Arewagate Token Fetcher using native Axios HTTP Basic Auth
+async function getArewagateToken() {
+  const publicKey = (process.env.AREWAGATE_PUBLIC_KEY || '').trim();
+  const secretKey = (process.env.AREWAGATE_SECRET_KEY || '').trim();
+
+  const authRes = await axios.post(
+    'https://api.arewagate.com/api/v1/auth/token',
+    {},
+    {
+      auth: {
+        username: publicKey,
+        password: secretKey
+      },
+      headers: {
+        'Accept': 'application/json'
+      }
+    }
+  );
+
+  return authRes.data.data?.token || authRes.data.access_token || authRes.data.token;
+}
+
 // Data Vending Route
 app.post('/api/vend', async (req, res) => {
   const { planOrAmount, phone, pin } = req.body;
@@ -42,16 +64,17 @@ app.post('/api/vend', async (req, res) => {
 
   const selectedPlan = PLAN_MAP[planOrAmount] || PLAN_MAP['mtn-sme-1gb'];
 
-  // 2. Local balance check
+  // 2. Check local wallet balance
   if (userWallet.balance < selectedPlan.cost) {
     return res.status(400).json({ success: false, message: 'Insufficient wallet balance' });
   }
 
   try {
-    const idempotencyKey = crypto.randomUUID();
-    const secretKey = (process.env.AREWAGATE_SECRET_KEY || '').trim();
+    // 3. Obtain Token via Basic Auth
+    const token = await getArewagateToken();
 
-    // 3. Dispatch order directly with Secret Key as Bearer Token
+    // 4. Dispatch live order to Arewagate
+    const idempotencyKey = crypto.randomUUID();
     const vendRes = await axios.post(
       'https://api.arewagate.com/api/v1/data-subscription/buy-data',
       {
@@ -62,14 +85,14 @@ app.post('/api/vend', async (req, res) => {
       },
       {
         headers: {
-          'Authorization': `Bearer ${secretKey}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
           'Idempotency-Key': idempotencyKey
         }
       }
     );
 
-    // 4. Deduct local balance upon successful provider response
+    // 5. Deduct local balance upon provider acceptance
     userWallet.balance -= selectedPlan.cost;
 
     return res.json({
